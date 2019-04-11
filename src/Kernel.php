@@ -28,8 +28,8 @@ class Kernel
         foreach ($routes as $route) {
             if ($route['url'] === $_SERVER['REQUEST_URI']) {
                 list($controller, $method) = explode('::', $route['controller'], 2);
-                $controller = new $controller();
-                $controller->{$method}($this->_container);
+                $controller = new $controller($this->_container);
+                $controller->{$method}();
                 return;
             }
         }

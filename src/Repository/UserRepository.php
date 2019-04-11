@@ -10,11 +10,10 @@ use JeroenFrenken\Chat\Services\EntityLoaderService;
 class UserRepository extends BaseRepository
 {
 
-    public function getAllUsers()
+    public function getAllUsers(): array
     {
         $sql = "SELECT * FROM users";
         $query = $this->pdo->query($sql);
-
         $users = [];
 
         foreach ($query->fetchAll(\PDO::FETCH_ASSOC) as $item) {
