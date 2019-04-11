@@ -9,8 +9,7 @@ abstract class BaseValidator
 
     public function validate()
     {
-
-
+        $data = $this->getData();
     }
 
 }

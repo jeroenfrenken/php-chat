@@ -21,7 +21,7 @@ class UserController extends BaseController
         /** @var UserRepository $userRepository */
         $userRepository = $this->container['repository']['user'];
 
-        $user = $userRepository->getUserByUsernameAndPassword('jeroenfrenfken', 'Jeroen12');
+        $user = $userRepository->getUserByUsernameAndPassword('jeroenfrenken', 'Jeroen12');
 
         var_dump($user); exit;
     }
