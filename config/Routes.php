@@ -2,6 +2,6 @@
 return [
     [
         'url' => '/chat',
-        'controller' => 'App\Controller\ChatController::getChats'
+        'controller' => 'JeroenFrenken\Chat\Controller\ChatController::getChats'
     ]
 ];

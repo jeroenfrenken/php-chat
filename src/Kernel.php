@@ -1,29 +1,40 @@
 <?php
 namespace JeroenFrenken\Chat;
 
-use JeroenFrenken\Chat\Event\Request;
-
 class Kernel
 {
 
     private $_container;
 
-    public function __construct()
+    public function __construct(array $routesConfig, array $databaseConfig)
     {
-        $this->buildContainer();
+        $this->buildContainer($routesConfig, $databaseConfig);
     }
 
-    private function buildContainer()
+    private function buildContainer(array $routesConfig, array $databaseConfig)
     {
         $this->_container = [];
-        $this->_container['config']['routes'] = require_once __DIR__ . '/../config/Routes.php';
-        $this->_container['config']['database'] = require_once __DIR__ . '/../config/Database.php';
+        $this->_container['config']['routes'] = $routesConfig;
+        $this->_container['config']['database'] = $databaseConfig;
+    }
+
+    private function loadController()
+    {
+        $routes = $this->_container['config']['routes'];
+
+        foreach ($routes as $route) {
+            if ($route['url'] === $_SERVER['REQUEST_URI']) {
+                list($controller, $method) = explode('::', $route['controller'], 2);
+                $controller = new $controller();
+                $controller->{$method}($this->_container);
+                return;
+            }
+        }
     }
 
     public function run()
     {
-        $request = new Request($this->_container);
-        $request->handle();
+        $this->loadController();
     }
 
 }
