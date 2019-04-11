@@ -15,7 +15,7 @@ return [
         ]
     ],
     [
-        'url' => '/auth',
+        'url' => '/authenticate',
         'controller' => 'JeroenFrenken\Chat\Controller\UserController::authenticateUser',
         'methods' => [
             'POST', 'OPTIONS'
