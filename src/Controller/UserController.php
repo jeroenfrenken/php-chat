@@ -8,12 +8,14 @@ class UserController extends BaseController
 
     public function getUser()
     {
-
+        var_dump('get user');
     }
 
     public function createUser()
     {
+        $data = file_get_contents('php://input');
 
+        var_dump($data); exit;
     }
 
     public function authenticateUser()

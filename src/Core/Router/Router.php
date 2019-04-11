@@ -18,12 +18,11 @@ class Router
 
     private function findDuplicateRoutes(string $route): array
     {
+        $routes = [];
         $foundRoutes = array_keys(
             array_combine(array_keys($this->_routes), array_column($this->_routes, 'url')),
             $route
         );
-
-        $routes = [];
 
         foreach ($foundRoutes as $routeKey) {
             $routes[] = $this->_routes[$routeKey];
@@ -32,7 +31,7 @@ class Router
         return $routes;
     }
 
-    private function checkMethod(array $route, string $method): bool
+    private function checkMethod(array $route, string $method): ?bool
     {
         if (isset($route['methods'])) {
             if (!in_array($method, $route['methods'])) {
@@ -47,9 +46,8 @@ class Router
                         }
                     }
 
-                    if (!$matched) {
-                        return false;
-                    }
+                    if ($matched) return null;
+                    return false;
                 } else {
                     return false;
                 }
@@ -81,8 +79,8 @@ class Router
         $urlRequestOptions = $this->getOptionsFromUrl($_SERVER['REQUEST_URI']);
         if (count($urlOptions) !== count($urlRequestOptions)) return null;
 
-        $requestOptions = [];
         $match = true;
+        $requestOptions = [];
 
         foreach ($urlOptions as $key => $value) {
             if (strpos($value, ':') !== false) {
@@ -92,10 +90,7 @@ class Router
             }
         }
 
-        if ($match) {
-            return $requestOptions;
-        }
-
+        if ($match) return $requestOptions;
         return null;
     }
 
@@ -106,9 +101,11 @@ class Router
         foreach ($routes as $route) {
             $match = $this->matchRoute($route['url']);
             if ($match !== null) {
-
-                if (!$this->checkMethod($route, $_SERVER['REQUEST_METHOD'])) {
+                $matchMethod = $this->checkMethod($route, $_SERVER['REQUEST_METHOD']);
+                if ($matchMethod === false) {
                     throw new MethodNotAllowedException();
+                } elseif ($matchMethod === null) {
+                    continue;
                 }
                 $this->loadController($route['controller'], $match);
                 return;

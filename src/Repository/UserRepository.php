@@ -24,26 +24,34 @@ class UserRepository extends BaseRepository
         return false;
     }
 
-    public function getUserByUsernameAndPassword(string $username, string $password): ?User
+    public function getUserByUsername(string $username): ?User
     {
         $sql = "SELECT * FROM users WHERE username = :username";
-
         $query = $this->pdo->prepare($sql);
         $query->bindParam(':username', $username);
         $query->execute();
 
         $data = $query->fetch(PDO::FETCH_ASSOC);
 
-        if (
-            !$data
-            || !password_verify($password, $data["password"])
-        ) {
-            return null;
-        }
+        if (!$data) return null;
 
         $user = new User();
         $user->load($data);
         return $user;
+    }
+
+    public function getUserByUsernameAndPassword(string $username, string $password): ?User
+    {
+        $user = $this->getUserByUsername($username);
+
+        if (
+            $user !== null
+            && password_verify($password, $user->getPassword())
+        ) {
+            return $user;
+        }
+
+        return null;
     }
 
 }
