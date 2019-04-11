@@ -1,5 +1,5 @@
 <?php
-namespace App\Services;
+namespace JeroenFrenken\Chat\Services;
 
 
 class DatabaseService

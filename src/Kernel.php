@@ -1,7 +1,7 @@
 <?php
-namespace App;
+namespace JeroenFrenken\Chat;
 
-use App\Event\Request;
+use JeroenFrenken\Chat\Event\Request;
 
 class Kernel
 {

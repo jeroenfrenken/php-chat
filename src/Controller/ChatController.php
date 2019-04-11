@@ -1,7 +1,5 @@
 <?php
-
-
-namespace App\Controller;
+namespace JeroenFrenken\Chat\Controller;
 
 
 class ChatController

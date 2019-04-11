@@ -1,5 +1,5 @@
 <?php
-namespace App\Event;
+namespace JeroenFrenken\Chat\Event;
 
 class Request
 {
