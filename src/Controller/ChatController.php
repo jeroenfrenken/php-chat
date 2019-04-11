@@ -7,9 +7,9 @@ namespace App\Controller;
 class ChatController
 {
 
-    public function getChats()
+    public function getChats(array $container)
     {
-
+        var_dump($container);
     }
 
 }

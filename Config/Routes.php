@@ -1,6 +1,4 @@
 <?php
-namespace App\Config;
-
 return [
     [
         'url' => '/chat',
