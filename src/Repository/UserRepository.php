@@ -1,28 +1,20 @@
 <?php
-
-
 namespace JeroenFrenken\Chat\Repository;
 
-
+use PDO;
 use JeroenFrenken\Chat\Entity\User;
-use JeroenFrenken\Chat\Services\EntityLoaderService;
 
 class UserRepository extends BaseRepository
 {
 
-    public function getAllUsers(): array
+    public function createUser(User $user): bool
     {
-        $sql = "SELECT * FROM users";
-        $query = $this->pdo->query($sql);
-        $users = [];
+        return false;
+    }
 
-        foreach ($query->fetchAll(\PDO::FETCH_ASSOC) as $item) {
-            $user = new User();
-            $user->load($item);
-            $users[] = $user;
-        }
-
-        return $users;
+    public function getUserByUsernameAndPassword(string $username, string $password): ?User
+    {
+        return new User();
     }
 
 }

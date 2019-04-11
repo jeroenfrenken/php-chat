@@ -1,12 +1,11 @@
 <?php
-
-
 namespace JeroenFrenken\Chat\Entity;
 
-
+use DateTime;
+use JsonSerializable;
 use JeroenFrenken\Chat\Interfaces\LoadableEntity;
 
-class User implements LoadableEntity
+class User implements LoadableEntity, JsonSerializable
 {
 
     /** @var int $id */
@@ -17,6 +16,12 @@ class User implements LoadableEntity
 
     /** @var string $password */
     protected $password;
+
+    /** @var string $token */
+    protected $token;
+
+    /** @var DateTime $tokenCreated */
+    protected $tokenCreated;
 
     /**
      * @return int
@@ -72,12 +77,58 @@ class User implements LoadableEntity
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    /**
+     * @param string $token
+     * @return User
+     */
+    public function setToken(string $token): self
+    {
+        $this->token = $token;
+        return $this;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getTokenCreated(): DateTime
+    {
+        return $this->tokenCreated;
+    }
+
+    /**
+     * @param DateTime $tokenCreated
+     * @return User
+     */
+    public function setTokenCreated(DateTime $tokenCreated): self
+    {
+        $this->tokenCreated = $tokenCreated;
+        return $this;
+    }
+
     public function load(array $items)
     {
         $this
             ->setId($items['id'])
             ->setUsername($items['username'])
-            ->setPassword($items['password']);
+            ->setPassword($items['password'])
+            ->setToken($items['token'])
+            ->setTokenCreated(new DateTime($items['token_created']));
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId(),
+            'username' => $this->getUsername()
+        ];
     }
 
 }

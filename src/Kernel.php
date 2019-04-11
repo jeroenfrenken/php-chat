@@ -1,8 +1,11 @@
 <?php
 namespace JeroenFrenken\Chat;
 
+use JeroenFrenken\Chat\Core\Router\Exception\MethodNotAllowedException;
+use JeroenFrenken\Chat\Core\Router\Exception\RouteNotFoundException;
+use JeroenFrenken\Chat\Core\Response\Response;
 use JeroenFrenken\Chat\Repository\UserRepository;
-use Medoo\Medoo;
+use JeroenFrenken\Chat\Core\Router\Router;
 
 class Kernel
 {
@@ -21,23 +24,16 @@ class Kernel
         $this->_container['repository']['user'] = new UserRepository($config['database']);
     }
 
-    private function loadController()
-    {
-        $routes = $this->_container['config']['routes'];
-
-        foreach ($routes as $route) {
-            if ($route['url'] === $_SERVER['REQUEST_URI']) {
-                list($controller, $method) = explode('::', $route['controller'], 2);
-                $controller = new $controller($this->_container);
-                $controller->{$method}();
-                return;
-            }
-        }
-    }
-
     public function run()
     {
-        $this->loadController();
+        $router = new Router($this->_container);
+        try {
+            $router->handleRequest();
+        } catch (RouteNotFoundException $e) {
+            new Response('Route not found', Response::NOT_FOUND);
+        } catch (MethodNotAllowedException $e) {
+            new Response('Method not allowed', Response::METHOD_NOT_ALLOWED);
+        }
     }
 
 }
