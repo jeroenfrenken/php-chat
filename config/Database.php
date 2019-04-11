@@ -1,6 +1,5 @@
 <?php
 
 return [
-  'user' => 'root',
-  'pass' => 'root',
+    'url' => __DIR__ . '/../database.db',
 ];

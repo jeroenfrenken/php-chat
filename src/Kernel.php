@@ -1,21 +1,24 @@
 <?php
 namespace JeroenFrenken\Chat;
 
+use JeroenFrenken\Chat\Repository\UserRepository;
+use Medoo\Medoo;
+
 class Kernel
 {
 
     private $_container;
 
-    public function __construct(array $routesConfig, array $databaseConfig)
+    public function __construct(array $config)
     {
-        $this->buildContainer($routesConfig, $databaseConfig);
+        $this->buildContainer($config);
     }
 
-    private function buildContainer(array $routesConfig, array $databaseConfig)
+    private function buildContainer(array $config)
     {
         $this->_container = [];
-        $this->_container['config']['routes'] = $routesConfig;
-        $this->_container['config']['database'] = $databaseConfig;
+        $this->_container['config'] = $config;
+        $this->_container['repository']['user'] = new UserRepository($config['database']);
     }
 
     private function loadController()

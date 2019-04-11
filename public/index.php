@@ -6,5 +6,8 @@ $databaseConfig = require_once __DIR__ . '/../config/Database.php';
 /*
  * Build the kernel and start it
  */
-$kernel = new JeroenFrenken\Chat\Kernel($routesConfig, $databaseConfig);
+$kernel = new JeroenFrenken\Chat\Kernel([
+    'routes' => $routesConfig,
+    'database' => $databaseConfig
+]);
 $kernel->run();
