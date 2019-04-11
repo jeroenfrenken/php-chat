@@ -17,7 +17,9 @@ class UserRepository extends BaseRepository
         $users = [];
 
         foreach ($query->fetchAll(\PDO::FETCH_ASSOC) as $item) {
-            $users[] = EntityLoaderService::loadEntity(User::class, $item);
+            $user = new User();
+            $user->load($item);
+            $users[] = $user;
         }
 
         return $users;

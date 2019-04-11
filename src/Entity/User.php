@@ -4,7 +4,9 @@
 namespace JeroenFrenken\Chat\Entity;
 
 
-class User
+use JeroenFrenken\Chat\Interfaces\LoadableEntity;
+
+class User implements LoadableEntity
 {
 
     /** @var int $id */
@@ -68,6 +70,14 @@ class User
     {
         $this->password = $password;
         return $this;
+    }
+
+    public function load(array $items)
+    {
+        $this
+            ->setId($items['id'])
+            ->setUsername($items['username'])
+            ->setPassword($items['password']);
     }
 
 }
