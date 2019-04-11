@@ -1,8 +1,9 @@
 <?php
+
 namespace JeroenFrenken\Chat\Core\Router;
 
-use JeroenFrenken\Chat\Core\Router\Exception\RouteNotFoundException;
 use JeroenFrenken\Chat\Core\Router\Exception\MethodNotAllowedException;
+use JeroenFrenken\Chat\Core\Router\Exception\RouteNotFoundException;
 
 class Router
 {
@@ -64,7 +65,7 @@ class Router
         call_user_func_array([$controller, $method], $options);
     }
 
-    private function getOptionsFromUrl(string $url) : array
+    private function getOptionsFromUrl(string $url): array
     {
         $urlOptions = explode('/', $url);
         foreach ($urlOptions as $key => $value) {

@@ -1,8 +1,9 @@
 <?php
+
 namespace JeroenFrenken\Chat\Entity;
 
-use JsonSerializable;
 use JeroenFrenken\Chat\Interfaces\LoadableEntity;
+use JsonSerializable;
 
 class Message implements LoadableEntity, JsonSerializable
 {

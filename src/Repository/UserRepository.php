@@ -1,8 +1,9 @@
 <?php
+
 namespace JeroenFrenken\Chat\Repository;
 
-use PDO;
 use JeroenFrenken\Chat\Entity\User;
+use PDO;
 
 class UserRepository extends BaseRepository
 {
@@ -18,7 +19,6 @@ class UserRepository extends BaseRepository
         $query->bindParam(':password', $user->getPassword());
         $query->bindParam(':token', $user->getToken());
         $query->bindParam(':tokenCreated', $user->getTokenCreated()->format('Y-m-d H:i:s'));
-
 
 
         return false;
@@ -43,14 +43,7 @@ class UserRepository extends BaseRepository
     public function getUserByUsernameAndPassword(string $username, string $password): ?User
     {
         $user = $this->getUserByUsername($username);
-
-        if (
-            $user !== null
-            && password_verify($password, $user->getPassword())
-        ) {
-            return $user;
-        }
-
+        if ($user !== null && password_verify($password, $user->getPassword())) return $user;
         return null;
     }
 

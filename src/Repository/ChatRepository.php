@@ -1,4 +1,5 @@
 <?php
+
 namespace JeroenFrenken\Chat\Repository;
 
 use JeroenFrenken\Chat\Entity\Chat;

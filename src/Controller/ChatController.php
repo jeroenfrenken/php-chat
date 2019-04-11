@@ -1,4 +1,5 @@
 <?php
+
 namespace JeroenFrenken\Chat\Controller;
 
 class ChatController extends BaseController

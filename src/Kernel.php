@@ -1,11 +1,12 @@
 <?php
+
 namespace JeroenFrenken\Chat;
 
+use JeroenFrenken\Chat\Core\Response\Response;
 use JeroenFrenken\Chat\Core\Router\Exception\MethodNotAllowedException;
 use JeroenFrenken\Chat\Core\Router\Exception\RouteNotFoundException;
-use JeroenFrenken\Chat\Core\Response\Response;
-use JeroenFrenken\Chat\Repository\UserRepository;
 use JeroenFrenken\Chat\Core\Router\Router;
+use JeroenFrenken\Chat\Repository\UserRepository;
 
 class Kernel
 {

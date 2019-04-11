@@ -1,9 +1,10 @@
 <?php
+
 namespace JeroenFrenken\Chat\Entity;
 
 use DateTime;
-use JsonSerializable;
 use JeroenFrenken\Chat\Interfaces\LoadableEntity;
+use JsonSerializable;
 
 class User implements LoadableEntity, JsonSerializable
 {
@@ -26,7 +27,7 @@ class User implements LoadableEntity, JsonSerializable
     /**
      * @return int
      */
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }

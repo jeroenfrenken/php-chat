@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . '/../vendor/autoload.php';
 $routesConfig = require_once __DIR__ . '/../config/Routes.php';
 $databaseConfig = require_once __DIR__ . '/../config/Database.php';
