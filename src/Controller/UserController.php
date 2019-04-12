@@ -2,6 +2,7 @@
 
 namespace JeroenFrenken\Chat\Controller;
 
+use JeroenFrenken\Chat\Core\Validator\Validator;
 use JeroenFrenken\Chat\Repository\UserRepository;
 
 class UserController extends BaseController
@@ -15,6 +16,14 @@ class UserController extends BaseController
     public function createUser()
     {
         $data = file_get_contents('php://input');
+
+        /** @var Validator $validator */
+        $validator = $this->container['service']['validation'];
+
+        var_dump($validator->validate('user', [
+            'username' => 'Jeroen',
+            'password' => 'Password'
+        ]));
 
         var_dump($data);
         exit;
