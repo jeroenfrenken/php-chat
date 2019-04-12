@@ -23,15 +23,15 @@ class Validator
      * @param string $field
      * @return ValidatorMessage
      */
-    private function validateItem(array $rules, string $field): ValidatorMessage
+    private function validateItem(array $rules, string $input): ValidatorMessage
     {
         if(isset($rules['regex'])) {
-            if(!preg_match($rules['regex'], $field)) {
+            if(!preg_match($rules['regex'], $input)) {
                 return new ValidatorMessage(false, $rules['message']);
             }
         } else {
             if(isset($rules['function'])) {
-                if(!$rules['function']($field)) {
+                if(!$rules['function']($input)) {
                     return new ValidatorMessage(false, $rules['message']);
                 }
             }
@@ -40,19 +40,19 @@ class Validator
         return new ValidatorMessage(true, "");
     }
 
-    public function validate(string $domain, array $input): ValidatorMessage
+    public function validate(string $key, array $validateData): ValidatorMessage
     {
-        if (!isset($this->_config[$domain])) {
+        if (!isset($this->_config[$key])) {
             return new ValidatorMessage(false, "Domain not found");
         } else {
-            $data = $this->_config[$domain];
+            $data = $this->_config[$key];
         }
 
-        foreach ($input as $key => $value) {
-            if (!isset($data[$key])) {
+        foreach ($validateData as $field => $input) {
+            if (!isset($data[$field])) {
                 return new ValidatorMessage(false, "Key not supported");
             }
-            $validate = $this->validateItem($data[$key], $value);
+            $validate = $this->validateItem($data[$field], $input);
             if (!$validate->isStatus()) {
                 return $validate;
             }
