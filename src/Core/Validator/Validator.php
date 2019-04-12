@@ -43,14 +43,14 @@ class Validator
     public function validate(string $key, array $validateData): ValidatorMessage
     {
         if (!isset($this->_config[$key])) {
-            return new ValidatorMessage(false, "Domain not found");
+            return new ValidatorMessage(false, "Key not found");
         } else {
             $data = $this->_config[$key];
         }
 
         foreach ($validateData as $field => $input) {
             if (!isset($data[$field])) {
-                return new ValidatorMessage(false, "Key not supported");
+                return new ValidatorMessage(false, "Field {$field} is not configured");
             }
             $validate = $this->validateItem($data[$field], $input);
             if (!$validate->isStatus()) {
