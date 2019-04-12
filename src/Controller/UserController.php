@@ -2,6 +2,7 @@
 
 namespace JeroenFrenken\Chat\Controller;
 
+use JeroenFrenken\Chat\Core\Response\JsonResponse;
 use JeroenFrenken\Chat\Core\Validator\Validator;
 use JeroenFrenken\Chat\Repository\UserRepository;
 
@@ -15,15 +16,17 @@ class UserController extends BaseController
 
     public function createUser()
     {
-        $data = file_get_contents('php://input');
+        $postContent = file_get_contents('php://input');
 
         /** @var Validator $validator */
         $validator = $this->container['service']['validation'];
 
-        var_dump($validator->validate('user', [
+        $response = $validator->validate('user', [
             'username' => 'Jeroen',
-            'password' => 'Password'
-        ]));
+            'pasfsword' => 'Password'
+        ]);
+
+        if (!$response->isStatus()) return new JsonResponse($response);
 
         var_dump($data);
         exit;

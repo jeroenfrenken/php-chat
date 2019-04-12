@@ -13,52 +13,50 @@ class Validator
     }
 
     /**
-     *
-     * Validates a input based on the rules
-     * A rules array contains a regex or a function with a message
-     *
-     * The function checks if the rules are correct with the user input and returns the right message
-     *
      * @param array $rules
      * @param string $field
-     * @return ValidatorMessage
+     * @param string $input
+     * @return ValidatorErrorMessage|null
      */
-    private function validateItem(array $rules, string $input): ValidatorMessage
+    private function validateItem(array $rules, string $field, string $input): ?ValidatorErrorMessage
     {
         if(isset($rules['regex'])) {
             if(!preg_match($rules['regex'], $input)) {
-                return new ValidatorMessage(false, $rules['message']);
+                return new ValidatorErrorMessage($field, $rules['message']);
             }
         } else {
             if(isset($rules['function'])) {
                 if(!$rules['function']($input)) {
-                    return new ValidatorMessage(false, $rules['message']);
+                    return new ValidatorErrorMessage($field, $rules['message']);
                 }
             }
         }
 
-        return new ValidatorMessage(true, "");
+        return null;
     }
 
-    public function validate(string $key, array $validateData): ValidatorMessage
+    public function validate(string $key, array $validateData): ValidatorResponse
     {
         if (!isset($this->_config[$key])) {
-            return new ValidatorMessage(false, "Key not found");
+            return new ValidatorResponse(false, []);
         } else {
             $data = $this->_config[$key];
         }
 
+        $messages = [];
+
         foreach ($validateData as $field => $input) {
             if (!isset($data[$field])) {
-                return new ValidatorMessage(false, "Field {$field} is not configured");
+                $messages[] = new ValidatorErrorMessage($field, "Field {$field} is not configured");
+                continue;
             }
-            $validate = $this->validateItem($data[$field], $input);
-            if (!$validate->isStatus()) {
-                return $validate;
+            $validate = $this->validateItem($data[$field],$field, $input);
+            if ($validate !== null) {
+                $messages[] = $validate;
             }
         }
 
-        return new ValidatorMessage(true, "Validation success");
+        return new ValidatorResponse(count($messages) === 0, $messages);
     }
 
 }
