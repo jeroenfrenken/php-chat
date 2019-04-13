@@ -10,7 +10,8 @@ return [
          * A special character . is also allowed
          */
         'regex' => "/^[a-zA-Z0-9\.]{2,40}$/m",
-        'message' => "Username not valid"
+        'message' => "Username not valid",
+        'required' => true,
     ],
     'password' => [
         /*
@@ -21,6 +22,7 @@ return [
          * A special character . is also allowed
          */
         'regex' => "/^[a-zA-Z0-9\.]{2,40}$/m",
-        'message' => "Password not valid"
+        'message' => "Password not valid",
+        'required' => true,
     ]
 ];

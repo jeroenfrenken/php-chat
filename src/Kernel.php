@@ -2,6 +2,7 @@
 
 namespace JeroenFrenken\Chat;
 
+use JeroenFrenken\Chat\Core\Container\Container;
 use JeroenFrenken\Chat\Core\Response\Response;
 use JeroenFrenken\Chat\Core\Router\Exception\MethodNotAllowedException;
 use JeroenFrenken\Chat\Core\Router\Exception\RouteNotFoundException;
@@ -10,6 +11,7 @@ use JeroenFrenken\Chat\Core\Validator\Validator;
 use JeroenFrenken\Chat\Repository\ChatRepository;
 use JeroenFrenken\Chat\Repository\MessageRepository;
 use JeroenFrenken\Chat\Repository\UserRepository;
+use JeroenFrenken\Chat\Services\GeneratorService;
 
 class Kernel
 {
@@ -23,17 +25,20 @@ class Kernel
 
     private function buildContainer(array $config)
     {
-        $this->_container = [];
-        $this->_container['config'] = $config;
-        $this->_container['repository']['user'] = new UserRepository($config['database']);
-        $this->_container['repository']['chat'] = new ChatRepository($config['database']);
-        $this->_container['repository']['message'] = new MessageRepository($config['database']);
-        $this->_container['service']['validation'] = new Validator($config['validation']);
+        $container = [];
+        $container['config'] = $config;
+        $container['repository']['user'] = new UserRepository($config['database']);
+        $container['repository']['chat'] = new ChatRepository($config['database']);
+        $container['repository']['message'] = new MessageRepository($config['database']);
+        $container['service']['validation'] = new Validator($config['validation']);
+        $container['service']['generator'] = new GeneratorService();
+        Container::setContainer($container);
+        $this->_container = $container;
     }
 
     public function run()
     {
-        $router = new Router($this->_container);
+        $router = new Router($this->_container['config']['routes']);
         try {
             $router->handleRequest();
         } catch (RouteNotFoundException $e) {

@@ -9,12 +9,10 @@ class Router
 {
 
     private $_routes;
-    private $_container;
 
-    public function __construct(array $container)
+    public function __construct(array $routes)
     {
-        $this->_container = $container;
-        $this->_routes = $container['config']['routes'];
+        $this->_routes = $routes;
     }
 
     private function findDuplicateRoutes(string $route): array
@@ -61,7 +59,7 @@ class Router
     private function loadController(string $controller, array $options = [])
     {
         list($controller, $method) = explode('::', $controller, 2);
-        $controller = new $controller($this->_container);
+        $controller = new $controller();
         call_user_func_array([$controller, $method], $options);
     }
 
