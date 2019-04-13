@@ -3,6 +3,7 @@
 namespace JeroenFrenken\Chat\Controller;
 
 use DateTime;
+use Exception;
 use JeroenFrenken\Chat\Core\Response\JsonResponse;
 use JeroenFrenken\Chat\Core\Response\Response;
 use JeroenFrenken\Chat\Core\Validator\Validator;
@@ -17,7 +18,7 @@ class UserController extends BaseController
     {
         try {
             $data = $this->handleJsonPostRequest();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return new JsonResponse([
                 [
                     'field' => 'input',
@@ -77,7 +78,7 @@ class UserController extends BaseController
     {
         try {
             $data = $this->handleJsonPostRequest();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return new JsonResponse([
                 [
                 'field' => 'input',

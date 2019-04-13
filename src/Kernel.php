@@ -60,16 +60,18 @@ class Kernel
         try {
             $route = $router->handle();
         } catch (RouteNotFoundException $e) {
-            new Response('Route not found', Response::NOT_FOUND);
+            $this->_response = new Response('Route not found', Response::NOT_FOUND);
         } catch (MethodNotAllowedException $e) {
-            new Response('Method not allowed', Response::METHOD_NOT_ALLOWED);
+            $this->_response = new Response('Method not allowed', Response::METHOD_NOT_ALLOWED);
         }
 
-        $this->_container['current_route'] = $route['route'];
-        Container::setContainer($this->_container);
-        $this->loadMiddleware();
         if ($this->_response === null) {
-            $this->_response = $this->loadClassMethod($route['route']['controller'], $route['params']);
+            $this->_container['current_route'] = $route['route'];
+            Container::setContainer($this->_container);
+            $this->loadMiddleware();
+            if ($this->_response === null) {
+                $this->_response = $this->loadClassMethod($route['route']['controller'], $route['params']);
+            }
         }
 
         $this->_response->send();

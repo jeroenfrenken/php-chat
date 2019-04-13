@@ -6,6 +6,7 @@ $databaseConfig = require_once __DIR__ . '/../config/Database.php';
 $middlewareConfig = require_once __DIR__ . '/../config/Middleware.php';
 // Import the validator related config files
 $userValidation = require_once __DIR__ . '/../config/Validation/User.php';
+$chatValidation = require_once __DIR__ . '/../config/Validation/Chat.php';
 $tokenValidation = require_once __DIR__ . '/../config/Validation/Token.php';
 
 /*
@@ -17,7 +18,8 @@ $kernel = new JeroenFrenken\Chat\Kernel([
     'middleware' => $middlewareConfig,
     'validation' => [
         'user' => $userValidation,
-        'token' => $tokenValidation
+        'token' => $tokenValidation,
+        'chat' => $chatValidation
     ]
 ]);
 $kernel->run();

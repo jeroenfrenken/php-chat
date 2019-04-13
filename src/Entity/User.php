@@ -123,6 +123,16 @@ class User implements LoadableEntity, JsonSerializable
             ->setTokenCreated(new DateTime($items['token_created']));
     }
 
+    public function loadWithPassword(array $items)
+    {
+        $this
+            ->setId($items['id'])
+            ->setUsername($items['username'])
+            ->setPassword($items['password'])
+            ->setToken($items['token'])
+            ->setTokenCreated(new DateTime($items['token_created']));
+    }
+
     public function jsonSerialize()
     {
         return [

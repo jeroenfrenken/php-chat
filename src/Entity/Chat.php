@@ -79,6 +79,7 @@ class Chat implements LoadableEntity, JsonSerializable
      */
     public function getMessages(): array
     {
+        if ($this->messages === null) return [];
         return $this->messages;
     }
 
@@ -94,11 +95,30 @@ class Chat implements LoadableEntity, JsonSerializable
 
     public function load(array $items)
     {
+        $owner = new User();
+        $owner->load([
+            'id' => $items['owner_id'],
+            'username' => $items['owner_username'],
+            'token' => '',
+            'token_created' => '0000-00-00 00:00:00'
+        ]);
+
+        $recipient = new User();
+        $recipient->load([
+            'id' => $items['recipient_id'],
+            'username' => $items['recipient_username'],
+            'token' => '',
+            'token_created' => '0000-00-00 00:00:00'
+        ]);
+
         $this
             ->setId($items['id'])
-            ->setOwner($items['owner'])
-            ->setRecipient($items['recipient'])
-            ->setMessages($items['messages']);
+            ->setOwner($owner)
+            ->setRecipient($recipient);
+
+        if (isset($items['messages'])) {
+            $this->setMessages($items['messages']);
+        }
     }
 
     public function jsonSerialize()

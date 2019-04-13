@@ -2,14 +2,17 @@
 
 namespace JeroenFrenken\Chat\Controller;
 
-use JeroenFrenken\Chat\Interfaces\AuthenticationInterface;
+use JeroenFrenken\Chat\Core\Response\JsonResponse;
+use JeroenFrenken\Chat\Entity\User;
 
-class UserAuthenticatedController extends BaseController implements AuthenticationInterface
+class UserAuthenticatedController extends BaseController
 {
 
     public function getUser()
     {
-        var_dump('get user');
+        /** @var User $user */
+        $user = $this->container['user'];
+        return new JsonResponse($user);
     }
 
 
