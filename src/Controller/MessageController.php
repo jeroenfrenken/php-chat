@@ -2,7 +2,9 @@
 
 namespace JeroenFrenken\Chat\Controller;
 
-class MessageController extends BaseController
+use JeroenFrenken\Chat\Interfaces\AuthenticationInterface;
+
+class MessageController extends BaseController implements AuthenticationInterface
 {
 
     public function createMessage(string $id)

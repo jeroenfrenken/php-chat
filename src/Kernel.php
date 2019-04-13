@@ -17,6 +17,7 @@ class Kernel
 {
 
     private $_container;
+    private $_response;
 
     public function __construct(array $config)
     {
@@ -36,16 +37,42 @@ class Kernel
         $this->_container = $container;
     }
 
+    private function loadClassMethod(string $controller, array $options): ?Response
+    {
+        list($controller, $method) = explode('::', $controller, 2);
+        $controller = new $controller();
+        return call_user_func_array([$controller, $method], $options);
+    }
+
+    private function loadMiddleware()
+    {
+        foreach ($this->_container['config']['middleware'] as $middleware) {
+            $response = $this->loadClassMethod($middleware['controller'] . '::handle', []);
+            if ($response !== null) {
+                $this->_response = $response;
+            }
+        }
+    }
+
     public function run()
     {
         $router = new Router($this->_container['config']['routes']);
         try {
-            $router->handleRequest();
+            $route = $router->handle();
         } catch (RouteNotFoundException $e) {
             new Response('Route not found', Response::NOT_FOUND);
         } catch (MethodNotAllowedException $e) {
             new Response('Method not allowed', Response::METHOD_NOT_ALLOWED);
         }
+
+        $this->_container['current_route'] = $route['route'];
+        Container::setContainer($this->_container);
+        $this->loadMiddleware();
+        if ($this->_response === null) {
+            $this->_response = $this->loadClassMethod($route['route']['controller'], $route['params']);
+        }
+
+        $this->_response->send();
     }
 
 }

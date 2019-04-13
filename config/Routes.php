@@ -3,7 +3,7 @@
 return [
     [
         'url' => '/user',
-        'controller' => 'JeroenFrenken\Chat\Controller\UserController::getUser',
+        'controller' => 'JeroenFrenken\Chat\Controller\UserAuthenticatedController::getUser',
         'methods' => [
             'GET', 'OPTIONS'
         ]

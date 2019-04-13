@@ -63,7 +63,7 @@ class User implements LoadableEntity, JsonSerializable
     /**
      * @return string
      */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
@@ -119,7 +119,6 @@ class User implements LoadableEntity, JsonSerializable
         $this
             ->setId($items['id'])
             ->setUsername($items['username'])
-            ->setPassword($items['password'])
             ->setToken($items['token'])
             ->setTokenCreated(new DateTime($items['token_created']));
     }

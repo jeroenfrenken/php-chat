@@ -2,8 +2,8 @@
 
 namespace JeroenFrenken\Chat\Repository;
 
-use JeroenFrenken\Chat\Entity\User;
 use PDO;
+use JeroenFrenken\Chat\Entity\User;
 
 class UserRepository extends BaseRepository
 {

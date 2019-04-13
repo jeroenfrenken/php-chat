@@ -2,7 +2,9 @@
 
 namespace JeroenFrenken\Chat\Controller;
 
-class ChatController extends BaseController
+use JeroenFrenken\Chat\Interfaces\AuthenticationInterface;
+
+class ChatController extends BaseController implements AuthenticationInterface
 {
 
     public function getChat(string $id)

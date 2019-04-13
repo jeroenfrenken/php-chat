@@ -56,13 +56,6 @@ class Router
         return true;
     }
 
-    private function loadController(string $controller, array $options = [])
-    {
-        list($controller, $method) = explode('::', $controller, 2);
-        $controller = new $controller();
-        call_user_func_array([$controller, $method], $options);
-    }
-
     private function getOptionsFromUrl(string $url): array
     {
         $urlOptions = explode('/', $url);
@@ -93,7 +86,7 @@ class Router
         return null;
     }
 
-    public function handleRequest()
+    public function handle()
     {
         $routes = $this->_routes;
 
@@ -106,8 +99,10 @@ class Router
                 } elseif ($matchMethod === null) {
                     continue;
                 }
-                $this->loadController($route['controller'], $match);
-                return;
+                return [
+                    'route' => $route,
+                    'params' => $match
+                ];
             }
         }
 

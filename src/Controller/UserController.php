@@ -13,11 +13,6 @@ use JeroenFrenken\Chat\Services\GeneratorService;
 class UserController extends BaseController
 {
 
-    public function getUser()
-    {
-        var_dump('get user');
-    }
-
     public function createUser()
     {
         try {

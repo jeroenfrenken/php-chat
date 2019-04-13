@@ -15,7 +15,7 @@ class Container
 
     public static function getContainer(): array
     {
-        if (self::$_container === null) return null;
+        if (self::$_container === null) return [];
         return self::$_container;
     }
 
