@@ -2,8 +2,9 @@
 
 namespace JeroenFrenken\Chat\Entity;
 
-use JeroenFrenken\Chat\Interfaces\LoadableEntity;
+use DateTime;
 use JsonSerializable;
+use JeroenFrenken\Chat\Interfaces\LoadableEntity;
 
 class Message implements LoadableEntity, JsonSerializable
 {
@@ -19,6 +20,9 @@ class Message implements LoadableEntity, JsonSerializable
 
     /** @var string $message */
     protected $message;
+
+    /** @var DateTime $created */
+    protected $created;
 
     /**
      * @return int
@@ -92,14 +96,39 @@ class Message implements LoadableEntity, JsonSerializable
         return $this;
     }
 
+    /**
+     * @return DateTime
+     */
+    public function getCreated(): DateTime
+    {
+        return $this->created;
+    }
+
+    /**
+     * @param DateTime $created
+     * @return Message
+     */
+    public function setCreated(DateTime $created): self
+    {
+        $this->created = $created;
+        return $this;
+    }
 
     public function load(array $items)
     {
+        $user = new User();
+        $user->setId($items['user_id']);
+        $user->setUsername($items['user_username']);
+
+        $chat = new Chat();
+        $chat->setId($items['chat_id']);
+
         $this
             ->setId($items['id'])
-            ->setChat($items['chat'])
-            ->setUser($items['user'])
-            ->setMessage($items['message']);
+            ->setChat($chat)
+            ->setUser($user)
+            ->setMessage($items['message'])
+            ->setCreated(new DateTime($items['created']));
     }
 
     public function jsonSerialize()
@@ -107,7 +136,8 @@ class Message implements LoadableEntity, JsonSerializable
         return [
             'id' => $this->getId(),
             'user' => $this->getUser(),
-            'message' => $this->getMessage()
+            'message' => $this->getMessage(),
+            'created' => $this->getCreated()
         ];
     }
 

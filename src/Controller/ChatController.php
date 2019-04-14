@@ -66,9 +66,7 @@ class ChatController extends BaseController
             ], Response::BAD_REQUEST);
         }
 
-        /** @var Validator $validator */
-        $validator = $this->container['service']['validation'];
-        $response = $validator->validate('chat', $data);
+        $response = $this->_validator->validate('chat', $data);
 
         if (!$response->isStatus()) return new JsonResponse($response, Response::BAD_REQUEST);
 
@@ -114,6 +112,18 @@ class ChatController extends BaseController
     public function deleteChat(string $id)
     {
 
+        $success = $this->_chatRepository->deleteChatByChatIdAndUserId(intval($id), $this->_user->getId());
+
+        if ($success) {
+            return new JsonResponse([]);
+        } else {
+            return new JsonResponse([
+                [
+                    'field' => 'unknown',
+                    'message' => 'Chat could not be deleted'
+                ]
+            ], Response::BAD_REQUEST);
+        }
     }
 
 }

@@ -33,8 +33,8 @@ class ChatRepository extends BaseRepository
                     recipient.username as recipient_username
                 FROM 
                     chats c
-                LEFT JOIN users owner on c.owner_id = owner.id
-                LEFT JOIN users recipient on c.recipient_id = recipient.id
+                INNER JOIN users owner on c.owner_id = owner.id
+                INNER JOIN users recipient on c.recipient_id = recipient.id
                 WHERE c.owner_id = :userId OR c.recipient_id = :userId";
 
         $query = $this->pdo->prepare($sql);
@@ -64,8 +64,8 @@ class ChatRepository extends BaseRepository
                     recipient.username as recipient_username
                 FROM 
                     chats c
-                LEFT JOIN users owner on c.owner_id = owner.id
-                LEFT JOIN users recipient on c.recipient_id = recipient.id
+                INNER JOIN users owner on c.owner_id = owner.id
+                INNER JOIN users recipient on c.recipient_id = recipient.id
                 WHERE c.owner_id = :userId AND c.id = :chatId OR c.recipient_id = :userId AND c.id = :chatId";
 
         $query = $this->pdo->prepare($sql);
@@ -82,9 +82,24 @@ class ChatRepository extends BaseRepository
         return $chat;
     }
 
-    public function deleteChatByChatId(int $chatId): bool
+    public function deleteChatByChatIdAndUserId(int $chatId, int $userId): bool
     {
-        return false;
+        $sql = "DELETE FROM chats
+                WHERE id = :chatId AND owner_id = :userId OR id = :chatId AND recipient_id = :userId";
+        $query = $this->pdo->prepare($sql);
+        $query->bindParam(':userId', $userId);
+        $query->bindParam(':chatId', $chatId);
+        $success = $query->execute();
+
+        if (!$success) return false;
+
+        $sql = "DELETE FROM messages
+                WHERE chat_id = :chatId";
+        $query = $this->pdo->prepare($sql);
+        $query->bindParam(':chatId', $chatId);
+        $success = $query->execute();
+
+        return $success;
     }
 
 }

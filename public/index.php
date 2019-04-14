@@ -8,6 +8,7 @@ $middlewareConfig = require_once __DIR__ . '/../config/Middleware.php';
 $userValidation = require_once __DIR__ . '/../config/Validation/User.php';
 $chatValidation = require_once __DIR__ . '/../config/Validation/Chat.php';
 $tokenValidation = require_once __DIR__ . '/../config/Validation/Token.php';
+$messageValidation = require_once  __DIR__ . '/../config/Validation/Message.php';
 
 /*
  * Build the kernel and start it
@@ -19,7 +20,8 @@ $kernel = new JeroenFrenken\Chat\Kernel([
     'validation' => [
         'user' => $userValidation,
         'token' => $tokenValidation,
-        'chat' => $chatValidation
+        'chat' => $chatValidation,
+        'message' => $messageValidation
     ]
 ]);
 $kernel->run();

@@ -13,10 +13,6 @@ class BaseRepository
     {
         $this->pdo = new PDO("sqlite:{$config['url']}");
         /*
-         * Set Charset to utf8
-         */
-        $this->pdo->query("SET NAMES utf8");
-        /*
          * Disable ATTR_EMULATE_PREPARES
          * https://stackoverflow.com/questions/134099/are-pdo-prepared-statements-sufficient-to-prevent-sql-injection
          */
