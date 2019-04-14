@@ -13,6 +13,32 @@ Run the setup. The setup creates the database.db file (or other sepcified in the
 php setup.php
 ```
 
+## Api Routes
+
+Authenticated routes needs a token which can be retrived while creating a user or authenticating a user. 
+
+For passing the token you need to add a header as the following:
+
+| HEADER            | Value |
+| ------------------|-------|
+| Authentication    | TOKEN |
+
+
+Here are all the api routes:
+
+| Route                 | Description           |  Method       | Authenticated | Post Body                                         |
+| ----------------------|-----------------------|---------------|---------------|---------------------------------------------------|
+| /user                 | Creates a user        | POST          | FALSE         | {"username": "USERNAME", "password", "PASSWORD"}  |
+| /authenticate         | Authenticates a user  | POST          | FALSE         | {"username": "USERNAME", "password", "PASSWORD"}  |
+| /user                 | Gets authenticated user | GET         | TRUE          |                                                   |
+| /chat                 | Gets chat of user     | GET           | TRUE          |                                                   |
+| /chat                 | Creates a chat        | POST          | TRUE          | {"username": "USERNAME_OF_RECIPIENT"}             |
+| /chat/:id             | Gets a single chat    | GET           | TRUE          |                                                   |
+| /chat/:id             | Deletes a chat        | DELETE        | TRUE          |                                                   |
+| /chat/:id/message     | Get messages of chat  | GET           | TRUE          |                                                   |
+| /chat/:id/message     | New chat message      | POST          | TRUE          | {"message": "CHAT_MESSAGE"}                       |
+
+
 ## Configuring the application
 
 All configuration is loaded and passed to the kernel in the public/index.php . Here you can add at a later stage other configuration files which are loaded automatically in the container under the key config.
