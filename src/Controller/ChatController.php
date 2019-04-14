@@ -87,6 +87,12 @@ class ChatController extends BaseController
     public function deleteChat(string $id)
     {
 
+        $chat = $this->_chatRepository->getSingleChatByChatIdAndUserId(intval($id), $this->_user->getId());
+
+        if ($chat === null) {
+            return ApiResponse::notFound('id', 'Chat not found');
+        }
+
         $success = $this->_chatRepository->deleteChatByChatIdAndUserId(intval($id), $this->_user->getId());
 
         if ($success) {

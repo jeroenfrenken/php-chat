@@ -70,6 +70,7 @@ class MessageController extends BaseController
 
     public function getMessages(string $id)
     {
+        $dateTime = null;
         if (isset($_GET['d'])) {
             try {
                 $dateTime = new DateTime($_GET['d']);
