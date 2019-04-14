@@ -4,11 +4,11 @@ namespace JeroenFrenken\Chat\Controller;
 
 use DateTime;
 use Exception;
-use JeroenFrenken\Chat\Entity\Chat;
 use JeroenFrenken\Chat\Entity\Message;
 use JeroenFrenken\Chat\Entity\User;
 use JeroenFrenken\Chat\Core\Validator\Validator;
 use JeroenFrenken\Chat\Core\Response\JsonResponse;
+use JeroenFrenken\Chat\Repository\ChatRepository;
 use JeroenFrenken\Chat\Repository\MessageRepository;
 use JeroenFrenken\Chat\Response\ApiResponse;
 
@@ -24,11 +24,15 @@ class MessageController extends BaseController
     /** @var MessageRepository $_messageRepository */
     private $_messageRepository;
 
+    /** @var ChatRepository $_chatRepository */
+    private $_chatRepository;
+
     public function __construct()
     {
         parent::__construct();
         $this->_user = $this->container['user'];
         $this->_messageRepository = $this->container['repository']['message'];
+        $this->_chatRepository = $this->container['repository']['chat'];
         $this->_validator = $this->container['service']['validation'];
     }
 
@@ -44,8 +48,9 @@ class MessageController extends BaseController
 
         if (!$response->isStatus()) return ApiResponse::badRequestWithData($response);
 
-        $chat = new Chat();
-        $chat->setId(intval($id));
+        $chat = $this->_chatRepository->getSingleChatByChatIdAndUserId(intval($id), $this->_user->getId());
+
+        if ($chat === null) return ApiResponse::notFound('id', 'Chat not found');
 
         $message = new Message();
         $message
@@ -65,6 +70,9 @@ class MessageController extends BaseController
 
     public function getMessages(string $id)
     {
+        $chat = $this->_chatRepository->getSingleChatByChatIdAndUserId(intval($id), $this->_user->getId());
+        if ($chat === null) return ApiResponse::notFound('id', 'Chat not found');
+
         return new JsonResponse(
             $this->_messageRepository->getMessagesByChatIdAndUserId(intval($id), $this->_user->getId())
         );

@@ -12,5 +12,4 @@ class UserAuthenticatedController extends BaseController
         return new JsonResponse($this->container['user']);
     }
 
-
 }

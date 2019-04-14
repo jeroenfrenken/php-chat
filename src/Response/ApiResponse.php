@@ -41,6 +41,23 @@ class ApiResponse
     }
 
     /**
+     * Returns a not authorized formatted as validator error messages
+     *
+     * @param string $field
+     * @param string $message
+     * @return JsonResponse
+     */
+    public static function notAuthorized(string $field, string $message)
+    {
+        return new JsonResponse([
+            [
+                'field' => $field,
+                'message' => $message
+            ]
+        ], Response::NOT_AUTHORIZED);
+    }
+
+    /**
      * Returns a not found formatted as validator error messages
      *
      * @param string $field

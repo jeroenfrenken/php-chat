@@ -13,17 +13,35 @@ use JeroenFrenken\Chat\Repository\MessageRepository;
 use JeroenFrenken\Chat\Repository\UserRepository;
 use JeroenFrenken\Chat\Services\GeneratorService;
 
+/**
+ * Class Kernel
+ * @package JeroenFrenken\Chat
+ */
 class Kernel
 {
 
+    /** @var array $_container */
     private $_container;
+
+    /** @var Response $_response */
     private $_response;
 
+    /**
+     * Creates a new Kernel with configuration files
+     *
+     * Kernel constructor.
+     * @param array $config
+     */
     public function __construct(array $config)
     {
         $this->buildContainer($config);
     }
 
+    /**
+     * Builds a container. The container is available in all the controllers of the application
+     *
+     * @param array $config
+     */
     private function buildContainer(array $config)
     {
         $container = [];
@@ -37,6 +55,14 @@ class Kernel
         $this->_container = $container;
     }
 
+    /**
+     * Loads a class and returns the return value of the class.
+     * All controllers must return a response
+     *
+     * @param string $controller
+     * @param array $options
+     * @return Response|null
+     */
     private function loadClassMethod(string $controller, array $options): ?Response
     {
         list($controller, $method) = explode('::', $controller, 2);
@@ -44,6 +70,9 @@ class Kernel
         return call_user_func_array([$controller, $method], $options);
     }
 
+    /**
+     * Loads configured middlewares
+     */
     private function loadMiddleware()
     {
         foreach ($this->_container['config']['middleware'] as $middleware) {
@@ -54,6 +83,9 @@ class Kernel
         }
     }
 
+    /**
+     * Starts the Kernel
+     */
     public function run()
     {
         $router = new Router($this->_container['config']['routes']);

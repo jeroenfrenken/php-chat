@@ -8,6 +8,7 @@ use JeroenFrenken\Chat\Core\Response\JsonResponse;
 use JeroenFrenken\Chat\Core\Response\Response;
 use JeroenFrenken\Chat\Core\Validator\Validator;
 use JeroenFrenken\Chat\Repository\UserRepository;
+use JeroenFrenken\Chat\Response\ApiResponse;
 
 /**
  * Checks the api key and sets the user in the container
@@ -23,12 +24,7 @@ class AuthenticationMiddleware extends AbstractMiddleware
         if ($this->container['current_route']['auth']) {
 
             if (!isset(getallheaders()['Authentication'])) {
-                return new JsonResponse([
-                    [
-                        'field' => 'header',
-                        'message' => 'Missing required authentication header'
-                    ]
-                ], Response::BAD_REQUEST);
+                return ApiResponse::badRequest('header', 'Missing required authentication header');
             }
 
             $token = getallheaders()['Authentication'];
@@ -46,19 +42,11 @@ class AuthenticationMiddleware extends AbstractMiddleware
 
             $user = $userRepository->getUserByToken($token);
 
-            if ($user === null) {
-                return new JsonResponse([
-                    [
-                        'field' => 'token',
-                        'message' => 'Token is not valid'
-                    ]
-                ], Response::BAD_REQUEST);
-            }
+            if ($user === null) return ApiResponse::notAuthorized('token', 'Token is not valid');
 
             $this->container['user'] = $user;
             Container::setContainer($this->container);
         }
-
     }
 
 }

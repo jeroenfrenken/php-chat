@@ -12,6 +12,7 @@ use PDO;
  */
 class BaseRepository
 {
+
     /** @var PDO $pdo */
     protected $pdo;
 

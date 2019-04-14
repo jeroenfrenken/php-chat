@@ -13,6 +13,7 @@ class Response
 
     public const OK = 200;
     public const BAD_REQUEST = 400;
+    public const NOT_AUTHORIZED = 401;
     public const NOT_FOUND = 404;
     public const METHOD_NOT_ALLOWED = 405;
     public const SERVER_ERROR = 500;
@@ -28,6 +29,11 @@ class Response
         $this->code = $code;
     }
 
+    /**
+     * Sets the response headers
+     *
+     * @param array $headers
+     */
     private function setHeaders(array $headers)
     {
         foreach ($headers as $key => $value) {
