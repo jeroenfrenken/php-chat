@@ -10,6 +10,7 @@ Run the setup. The setup creates the database.db file (or other sepcified in the
 > Be sure to execute this in the root directory of the project
 
 ```php
+composer install
 php setup.php
 ```
 
