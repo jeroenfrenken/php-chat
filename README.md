@@ -50,7 +50,7 @@ The chat application uses configuration files for the following things
 | config/Database.php   | Database url configuration (only sqlite database allowed)                   |
 | config/Middleware.php | A array of middlewares which will be executed before a controller is loaded |
 | config/Routes.php     | A array of routes in the application (see the router)                       |
-| config/Validation/*   | Here you can define custom validation domains (see the validator)           |
+| config/Validation/*   | Here you can define custom validation keys (see the validator)              |
 
 ## The Container
 
