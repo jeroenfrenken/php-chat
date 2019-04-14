@@ -66,7 +66,10 @@ class ChatRepository extends BaseRepository
                     chats c
                 INNER JOIN users owner on c.owner_id = owner.id
                 INNER JOIN users recipient on c.recipient_id = recipient.id
-                WHERE c.owner_id = :userId AND c.id = :chatId OR c.recipient_id = :userId AND c.id = :chatId";
+                WHERE 
+                      c.id = :chatId AND
+                      (c.owner_id = :userId OR
+                       c.recipient_id = :userId)";
 
         $query = $this->pdo->prepare($sql);
         $query->bindParam(':userId', $userId);
@@ -85,7 +88,10 @@ class ChatRepository extends BaseRepository
     public function deleteChatByChatIdAndUserId(int $chatId, int $userId): bool
     {
         $sql = "DELETE FROM chats
-                WHERE id = :chatId AND owner_id = :userId OR id = :chatId AND recipient_id = :userId";
+                WHERE 
+                      id = :chatId AND 
+                      (owner_id = :userId OR 
+                       recipient_id = :userId)";
         $query = $this->pdo->prepare($sql);
         $query->bindParam(':userId', $userId);
         $query->bindParam(':chatId', $chatId);

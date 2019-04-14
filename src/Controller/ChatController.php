@@ -4,7 +4,6 @@ namespace JeroenFrenken\Chat\Controller;
 
 use Exception;
 use JeroenFrenken\Chat\Core\Response\JsonResponse;
-use JeroenFrenken\Chat\Core\Response\Response;
 use JeroenFrenken\Chat\Core\Validator\Validator;
 use JeroenFrenken\Chat\Entity\Chat;
 use JeroenFrenken\Chat\Entity\User;

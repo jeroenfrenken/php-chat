@@ -109,7 +109,7 @@ class Router
     private function matchRoute(string $url): ?array
     {
         $urlOptions = $this->getOptionsFromUrl($url);
-        $urlRequestOptions = $this->getOptionsFromUrl($_SERVER['REQUEST_URI']);
+        $urlRequestOptions = $this->getOptionsFromUrl(strtok($_SERVER["REQUEST_URI"],'?'));
         if (count($urlOptions) !== count($urlRequestOptions)) return null;
 
         $match = true;

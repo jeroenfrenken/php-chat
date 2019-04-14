@@ -70,8 +70,26 @@ class MessageController extends BaseController
 
     public function getMessages(string $id)
     {
+        if (isset($_GET['d'])) {
+            try {
+                $dateTime = new DateTime($_GET['d']);
+            } catch (Exception $e) {
+                return ApiResponse::badRequest('d', 'Datetime not right formatted');
+            }
+        }
+
         $chat = $this->_chatRepository->getSingleChatByChatIdAndUserId(intval($id), $this->_user->getId());
         if ($chat === null) return ApiResponse::notFound('id', 'Chat not found');
+
+        if ($dateTime !== null) {
+            return new JsonResponse(
+                $this->_messageRepository->getMessagesByChatIdAndUserIdAndTime(
+                    intval($id),
+                    $this->_user->getId(),
+                    $dateTime
+                )
+            );
+        }
 
         return new JsonResponse(
             $this->_messageRepository->getMessagesByChatIdAndUserId(intval($id), $this->_user->getId())
