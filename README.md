@@ -38,6 +38,7 @@ Here are all the api routes:
 | /chat/:id/message     | Get messages of chat  | GET           | TRUE          |                                                   |
 | /chat/:id/message     | New chat message      | POST          | TRUE          | {"message": "CHAT_MESSAGE"}                       |
 
+The /chat/:id/message GET also supports the ?d=YYYY-MM-DDTHH:MM:SS parameter to get all chat messages from a given timestamp.
 
 ## Configuring the application
 
