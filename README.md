@@ -38,6 +38,7 @@ Here are all the api routes:
 | /chat/:id/message     | Get messages of chat  | GET           | TRUE          |                                                   |
 | /chat/:id/message     | New chat message      | POST          | TRUE          | {"message": "CHAT_MESSAGE"}                       |
 
+The /chat/:id/message GET also supports the ?d=YYYY-MM-DDTHH:MM:SS parameter to get all chat messages from a given timestamp.
 
 ## Configuring the application
 
@@ -50,7 +51,7 @@ The chat application uses configuration files for the following things
 | config/Database.php   | Database url configuration (only sqlite database allowed)                   |
 | config/Middleware.php | A array of middlewares which will be executed before a controller is loaded |
 | config/Routes.php     | A array of routes in the application (see the router)                       |
-| config/Validation/*   | Here you can define custom validation domains (see the validator)           |
+| config/Validation/*   | Here you can define custom validation keys (see the validator)              |
 
 ## The Container
 
