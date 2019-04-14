@@ -4,13 +4,13 @@ namespace JeroenFrenken\Chat\Controller;
 
 use DateTime;
 use Exception;
-use JeroenFrenken\Chat\Core\Response\Response;
 use JeroenFrenken\Chat\Entity\Chat;
 use JeroenFrenken\Chat\Entity\Message;
 use JeroenFrenken\Chat\Entity\User;
 use JeroenFrenken\Chat\Core\Validator\Validator;
 use JeroenFrenken\Chat\Core\Response\JsonResponse;
 use JeroenFrenken\Chat\Repository\MessageRepository;
+use JeroenFrenken\Chat\Response\ApiResponse;
 
 class MessageController extends BaseController
 {
@@ -37,17 +37,12 @@ class MessageController extends BaseController
         try {
             $data = $this->handleJsonPostRequest();
         } catch (Exception $e) {
-            return new JsonResponse([
-                [
-                    'field' => 'input',
-                    'message' => 'Json not right formatted'
-                ]
-            ], Response::BAD_REQUEST);
+            return ApiResponse::badRequest('input', 'Json not right formatted');
         }
 
         $response = $this->_validator->validate('message', $data);
 
-        if (!$response->isStatus()) return new JsonResponse($response, Response::BAD_REQUEST);
+        if (!$response->isStatus()) return ApiResponse::badRequestWithData($response);
 
         $chat = new Chat();
         $chat->setId(intval($id));
@@ -64,12 +59,7 @@ class MessageController extends BaseController
         if ($success) {
             return new JsonResponse([]);
         } else {
-            return new JsonResponse([
-                [
-                    'field' => 'unknown',
-                    'message' => 'Message creation failed'
-                ]
-            ], Response::SERVER_ERROR);
+            return ApiResponse::serverError('unknown', 'Message creation failed');
         }
     }
 

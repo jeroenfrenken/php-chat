@@ -5,59 +5,56 @@ namespace JeroenFrenken\Chat\Controller;
 use DateTime;
 use Exception;
 use JeroenFrenken\Chat\Core\Response\JsonResponse;
-use JeroenFrenken\Chat\Core\Response\Response;
 use JeroenFrenken\Chat\Core\Validator\Validator;
 use JeroenFrenken\Chat\Entity\User;
 use JeroenFrenken\Chat\Repository\UserRepository;
+use JeroenFrenken\Chat\Response\ApiResponse;
 use JeroenFrenken\Chat\Services\GeneratorService;
 
 class UserController extends BaseController
 {
+
+    /** @var Validator $_validator */
+    private $_validator;
+
+    /** @var UserRepository $_userRepository */
+    private $_userRepository;
+
+    /** @var GeneratorService $_generator */
+    private $_generator;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->_validator = $this->container['service']['validation'];
+        $this->_userRepository = $this->container['repository']['user'];
+        $this->container = $this->container['service']['generator'];
+    }
 
     public function createUser()
     {
         try {
             $data = $this->handleJsonPostRequest();
         } catch (Exception $exception) {
-            return new JsonResponse([
-                [
-                    'field' => 'input',
-                    'message' => 'Json not right formatted'
-                ]
-            ], Response::BAD_REQUEST);
+            return ApiResponse::badRequest('input', 'Json not right formatted');
         }
 
-        /** @var Validator $validator */
-        $validator = $this->container['service']['validation'];
-        $response = $validator->validate('user', $data);
+        $response = $this->_validator->validate('user', $data);
 
-        if (!$response->isStatus()) return new JsonResponse($response);
-
-        /** @var GeneratorService $generator */
-        $generator = $this->container['service']['generator'];
+        if (!$response->isStatus()) return ApiResponse::badRequestWithData($response);
 
         $user = new User();
         $user
             ->setUsername($data['username'])
             ->setPassword($data['password'])
-            ->setToken($generator->generateToken())
+            ->setToken($this->_generator->generateToken())
             ->setTokenCreated(new DateTime());
 
-        /** @var UserRepository $userRepository */
-        $userRepository = $this->container['repository']['user'];
+        $findUser = $this->_userRepository->getUserByUsername($user->getUsername());
 
-        $findUser = $userRepository->getUserByUsername($user->getUsername());
+        if ($findUser !== null) return ApiResponse::badRequest('username', 'Username already exists');
 
-        if ($findUser !== null) {
-            return new JsonResponse([
-                [
-                    'field' => 'username',
-                    'message' => 'Username already exists'
-                ]
-            ], Response::BAD_REQUEST);
-        }
-
-        $res = $userRepository->createUser($user);
+        $res = $this->_userRepository->createUser($user);
 
         if ($res) {
             return new JsonResponse([
@@ -65,12 +62,7 @@ class UserController extends BaseController
                 'token' => $user->getToken()
             ]);
         } else {
-            return new JsonResponse([
-                [
-                    'field' => 'unknown',
-                    'message' => 'User creation failed'
-                ]
-            ], Response::BAD_REQUEST);
+            return ApiResponse::serverError('unknown', 'User creation failed');
         }
     }
 
@@ -79,40 +71,22 @@ class UserController extends BaseController
         try {
             $data = $this->handleJsonPostRequest();
         } catch (Exception $exception) {
-            return new JsonResponse([
-                [
-                'field' => 'input',
-                'message' => 'Json not right formatted'
-                ]
-            ], Response::BAD_REQUEST);
+            return ApiResponse::badRequest('input', 'Json not right formatted');
         }
 
-        /** @var Validator $validator */
-        $validator = $this->container['service']['validation'];
-        $response = $validator->validate('user', $data);
+        $response = $this->_validator->validate('user', $data);
 
-        if (!$response->isStatus()) return new JsonResponse($response);
+        if (!$response->isStatus()) return ApiResponse::badRequestWithData($response);
 
-        /** @var UserRepository $userRepository */
-        $userRepository = $this->container['repository']['user'];
+        $user = $this->_userRepository->getUserByUsernameAndPassword($data['username'], $data['password']);
 
-        $user = $userRepository->getUserByUsernameAndPassword($data['username'], $data['password']);
-
-        if ($user === null) {
-            return new JsonResponse([
-                'field' => 'unknown',
-                'message' => 'Username or password is not valid'
-            ], Response::BAD_REQUEST);
-        }
-
-        /** @var GeneratorService $generator */
-        $generator = $this->container['service']['generator'];
+        if ($user === null) return ApiResponse::badRequest('unknown', 'Username or password is not valid');
 
         $user
-            ->setToken($generator->generateToken())
+            ->setToken($this->_generator->generateToken())
             ->setTokenCreated(new DateTime());
 
-        $status = $userRepository->exchangeNewToken($user);
+        $status = $this->_userRepository->exchangeNewToken($user);
 
         if ($status) {
             return new JsonResponse([
@@ -121,12 +95,7 @@ class UserController extends BaseController
                 'token' => $user->getToken()
             ]);
         } else {
-            return new JsonResponse([
-                [
-                    'field' => 'unknown',
-                    'message' => 'User authentication failed'
-                ]
-            ], Response::SERVER_ERROR);
+            return ApiResponse::serverError('unknown', 'User authentication failed');
         }
     }
 

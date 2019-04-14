@@ -2,6 +2,7 @@
 
 namespace JeroenFrenken\Chat\Controller;
 
+use Exception;
 use JeroenFrenken\Chat\Core\Response\JsonResponse;
 use JeroenFrenken\Chat\Core\Response\Response;
 use JeroenFrenken\Chat\Core\Validator\Validator;
@@ -9,6 +10,7 @@ use JeroenFrenken\Chat\Entity\Chat;
 use JeroenFrenken\Chat\Entity\User;
 use JeroenFrenken\Chat\Repository\ChatRepository;
 use JeroenFrenken\Chat\Repository\UserRepository;
+use JeroenFrenken\Chat\Response\ApiResponse;
 
 class ChatController extends BaseController
 {
@@ -38,12 +40,7 @@ class ChatController extends BaseController
     {
         $chat = $this->_chatRepository->getSingleChatByChatIdAndUserId(intval($id), $this->_user->getId());
         if ($chat === null) {
-            return new JsonResponse([
-                [
-                    'field' => 'id',
-                    'message' => 'Chat not found'
-                ]
-            ], Response::NOT_FOUND);
+            return ApiResponse::notFound('id', 'Chat not found');
         }
         return new JsonResponse($chat);
     }
@@ -57,38 +54,22 @@ class ChatController extends BaseController
     {
         try {
             $data = $this->handleJsonPostRequest();
-        } catch (\Exception $exception) {
-            return new JsonResponse([
-                [
-                    'field' => 'input',
-                    'message' => 'Json not right formatted'
-                ]
-            ], Response::BAD_REQUEST);
+        } catch (Exception $exception) {
+            return ApiResponse::badRequest('input', 'Json not right formatted');
         }
 
         $response = $this->_validator->validate('chat', $data);
 
-        if (!$response->isStatus()) return new JsonResponse($response, Response::BAD_REQUEST);
+        if (!$response->isStatus()) return ApiResponse::badRequestWithData($response->getMessages());
 
-        /** @var User $recipient */
         $recipient = $this->_userRepository->getUserByUsername($data['recipient']);
 
         if ($recipient === null) {
-            return new JsonResponse([
-                [
-                    'field' => 'recipient',
-                    'message' => 'Recipient not found'
-                ]
-            ], Response::NOT_FOUND);
+            return ApiResponse::notFound('recipient', 'Recipient not found');
         }
 
         if ($this->_user->getId() === $recipient->getId()) {
-            return new JsonResponse([
-                [
-                    'field' => 'recipient',
-                    'message' => 'Recipient can not be the owner of the chat'
-                ]
-            ], Response::BAD_REQUEST);
+            return ApiResponse::badRequest('recipient', 'Recipient can not be same as owner');
         }
 
         $chat = new Chat();
@@ -100,12 +81,7 @@ class ChatController extends BaseController
         if ($success) {
             return new JsonResponse([]);
         } else {
-            return new JsonResponse([
-                [
-                    'field' => 'unknown',
-                    'message' => 'Chat creation failed'
-                ]
-            ], Response::BAD_REQUEST);
+            return ApiResponse::serverError('unknown', 'Chat creation failed');
         }
     }
 
@@ -117,12 +93,7 @@ class ChatController extends BaseController
         if ($success) {
             return new JsonResponse([]);
         } else {
-            return new JsonResponse([
-                [
-                    'field' => 'unknown',
-                    'message' => 'Chat could not be deleted'
-                ]
-            ], Response::BAD_REQUEST);
+            return ApiResponse::serverError('unknown', 'Chat could not be deleted');
         }
     }
 

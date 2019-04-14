@@ -2,6 +2,7 @@
 
 namespace JeroenFrenken\Chat\Controller;
 
+use Exception;
 use JeroenFrenken\Chat\Core\Container\ContainerAwareTrait;
 
 class BaseController
@@ -14,7 +15,7 @@ class BaseController
         $postContent = file_get_contents('php://input');
 
         $data = json_decode($postContent, true);
-        if (json_last_error() !== JSON_ERROR_NONE) throw new \Exception("Json format exception");
+        if (json_last_error() !== JSON_ERROR_NONE) throw new Exception("Json format exception");
 
         return $data;
     }
