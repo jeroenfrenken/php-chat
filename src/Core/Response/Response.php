@@ -2,6 +2,12 @@
 
 namespace JeroenFrenken\Chat\Core\Response;
 
+/**
+ * A response returned by all controllers
+ *
+ * Class Response
+ * @package JeroenFrenken\Chat\Core\Response
+ */
 class Response
 {
 
@@ -29,6 +35,9 @@ class Response
         }
     }
 
+    /**
+     * Builds the response for the view
+     */
     public function send()
     {
         http_response_code($this->code);

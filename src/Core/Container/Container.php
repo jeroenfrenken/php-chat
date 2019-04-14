@@ -11,6 +11,7 @@ namespace JeroenFrenken\Chat\Core\Container;
 class Container
 {
 
+    /** @var array $_container */
     private static $_container;
 
     public static function getContainer(): array

@@ -9,6 +9,12 @@ use JeroenFrenken\Chat\Core\Response\Response;
 use JeroenFrenken\Chat\Core\Validator\Validator;
 use JeroenFrenken\Chat\Repository\UserRepository;
 
+/**
+ * Checks the api key and sets the user in the container
+ *
+ * Class AuthenticationMiddleware
+ * @package JeroenFrenken\Chat\Middleware
+ */
 class AuthenticationMiddleware extends AbstractMiddleware
 {
 

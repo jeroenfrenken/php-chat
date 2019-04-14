@@ -2,6 +2,12 @@
 
 namespace JeroenFrenken\Chat\Core\Container;
 
+/**
+ * A trait that loads the container
+ *
+ * Trait ContainerAwareTrait
+ * @package JeroenFrenken\Chat\Core\Container
+ */
 trait ContainerAwareTrait
 {
 

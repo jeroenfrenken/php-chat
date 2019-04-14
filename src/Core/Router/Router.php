@@ -5,16 +5,32 @@ namespace JeroenFrenken\Chat\Core\Router;
 use JeroenFrenken\Chat\Core\Router\Exception\MethodNotAllowedException;
 use JeroenFrenken\Chat\Core\Router\Exception\RouteNotFoundException;
 
+/**
+ * Class Router
+ * @package JeroenFrenken\Chat\Core\Router
+ */
 class Router
 {
 
+    /** @var array $_routes */
     private $_routes;
 
+    /**
+     * Router constructor.
+     * @param array $routes
+     */
     public function __construct(array $routes)
     {
         $this->_routes = $routes;
     }
 
+
+    /**
+     * Finds duplicate routes and returns them as a array
+     *
+     * @param string $route
+     * @return array
+     */
     private function findDuplicateRoutes(string $route): array
     {
         $routes = [];
@@ -30,6 +46,19 @@ class Router
         return $routes;
     }
 
+    /**
+     * Checks if a method is allowed for the current route
+     * also checks if the route is a duplicate with a other method
+     *
+     * The duplicate check makes the following possible
+     *
+     * POST /user
+     * GET /user
+     *
+     * @param array $route
+     * @param string $method
+     * @return bool|null
+     */
     private function checkMethod(array $route, string $method): ?bool
     {
         if (isset($route['methods'])) {
@@ -56,6 +85,12 @@ class Router
         return true;
     }
 
+    /**
+     * Parses a url to array and unsets data that is not needed
+     *
+     * @param string $url
+     * @return array
+     */
     private function getOptionsFromUrl(string $url): array
     {
         $urlOptions = explode('/', $url);
@@ -65,6 +100,12 @@ class Router
         return $urlOptions;
     }
 
+    /**
+     * Matches a route and takes in account that a route can have parameters like /user/:id
+     *
+     * @param string $url
+     * @return array|null
+     */
     private function matchRoute(string $url): ?array
     {
         $urlOptions = $this->getOptionsFromUrl($url);
@@ -86,6 +127,13 @@ class Router
         return null;
     }
 
+    /**
+     * Starts the router
+     *
+     * @return array
+     * @throws MethodNotAllowedException
+     * @throws RouteNotFoundException
+     */
     public function handle()
     {
         $routes = $this->_routes;
