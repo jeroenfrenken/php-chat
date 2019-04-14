@@ -28,7 +28,7 @@ class UserController extends BaseController
         parent::__construct();
         $this->_validator = $this->container['service']['validation'];
         $this->_userRepository = $this->container['repository']['user'];
-        $this->container = $this->container['service']['generator'];
+        $this->_generator = $this->container['service']['generator'];
     }
 
     public function createUser()

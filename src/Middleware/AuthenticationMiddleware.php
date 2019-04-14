@@ -5,7 +5,6 @@ namespace JeroenFrenken\Chat\Middleware;
 use JeroenFrenken\Chat\Core\Container\Container;
 use JeroenFrenken\Chat\Core\Middleware\AbstractMiddleware;
 use JeroenFrenken\Chat\Core\Response\JsonResponse;
-use JeroenFrenken\Chat\Core\Response\Response;
 use JeroenFrenken\Chat\Core\Validator\Validator;
 use JeroenFrenken\Chat\Repository\UserRepository;
 use JeroenFrenken\Chat\Response\ApiResponse;
